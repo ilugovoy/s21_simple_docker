@@ -1,17 +1,22 @@
-FROM nginx:latest
+FROM nginx:latest AS build
 
-COPY /nginx/nginx.conf /etc/nginx/
-COPY server.c /app/server.c
-
-WORKDIR /app
-
+# Установка зависимостей
 RUN apt-get update && \
     apt-get install -y gcc make libfcgi-dev spawn-fcgi && \
-	gcc -o my_server server.c -lfcgi && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get clean
 
-# apt-get clean: удаляет все локальные копии пакетов из папки /var/cache/apt/archives, которые больше не могут быть загружены и использованы
-# rm -rf /var/lib/apt/lists/*: удаляет списки пакетов, полученные в результате обновления и установки пакетов. 
-# Это помогает уменьшить количество места, занимаемое неиспользуемыми и устаревшими списками 
+COPY server.c /app/server.c
+WORKDIR /app
 
-CMD spawn-fcgi -p 8080 /app/my_server && nginx -g 'daemon off;'
+# Сборка сервера
+RUN gcc -o my_server server.c -lfcgi
+
+# Финальный образ
+FROM nginx:latest
+
+# Копируем конфиги и скомпилированное приложение
+COPY /nginx/nginx.conf /etc/nginx/
+COPY --from=build /app/my_server /usr/local/bin/my_server
+
+# Запуск приложения и Nginx
+CMD spawn-fcgi -p 8080 /usr/local/bin/my_server && nginx -g 'daemon off;'
