@@ -1,7 +1,5 @@
 FROM nginx:latest AS build
 
-WORKDIR /app
-
 # Установка зависимостей
 RUN apt-get update && \
     apt-get install -y gcc make libfcgi-dev spawn-fcgi && \
@@ -10,6 +8,8 @@ RUN apt-get update && \
 # Копируем конфиги и файл сервера
 COPY /nginx/nginx.conf /etc/nginx/
 COPY server.c /app/server.c
+
+WORKDIR /app
 
 # Сборка сервера
 RUN gcc -o my_server server.c -lfcgi
