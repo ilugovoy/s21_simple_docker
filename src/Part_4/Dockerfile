@@ -21,5 +21,7 @@ FROM nginx:latest
 COPY /nginx/nginx.conf /etc/nginx/
 COPY --from=build /app/my_server /usr/local/bin/my_server
 
+EXPOSE 8080
+
 # Запуск приложения и Nginx
 CMD spawn-fcgi -p 8080 /usr/local/bin/my_server && nginx -g 'daemon off;'
