@@ -13,6 +13,7 @@ COPY server.c /app/server.c
 # Сборка сервера
 RUN gcc -o my_server server.c -lfcgi
 
+
 # Финальный образ
 FROM nginx:latest
 
