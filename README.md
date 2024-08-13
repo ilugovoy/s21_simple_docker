@@ -387,7 +387,7 @@ spawn-fcgi -p 8080 /app/my_server
 Запилил докерфайл с одним RUN  
 
 ```Dockerfile
-FROM nginx:latest AS build
+FROM nginx:alpine AS build
 
 # Установка зависимостей
 RUN apt-get update && \
@@ -404,7 +404,7 @@ RUN gcc -o my_server server.c -lfcgi
 
 
 # Финальный образ
-FROM nginx:latest
+FROM nginx:alpine
 
 # Копируем скомпилированное приложение и конфигурацию
 COPY /nginx/nginx.conf /etc/nginx/
@@ -506,7 +506,7 @@ CMD spawn-fcgi -p 8080 /usr/local/bin/my_server && nginx -g 'daemon off;'
 Исправил образ так, чтобы при проверке через **dockle** не было ошибок и предупреждений  
 
 ```Dockerfile
-FROM nginx:latest AS build
+FROM nginx:alpine AS build
 
 # Установка зависимостей
 RUN apt-get update && \
@@ -523,7 +523,7 @@ RUN gcc -o my_server server.c -lfcgi
 
 
 # Финальный образ
-FROM nginx:latest
+FROM nginx:alpine
 
 # Создание пользователя в контейнере
 RUN useradd --create-home fungusgr && \
