@@ -1,4 +1,4 @@
-FROM nginx:latest AS build
+FROM nginx:alpine AS build
 
 # Установка зависимостей
 RUN apt-get update && \
@@ -15,7 +15,7 @@ RUN gcc -o my_server server.c -lfcgi
 
 
 # Финальный образ
-FROM nginx:latest
+FROM nginx:alpine
 
 # Создание пользователя в контейнере
 RUN useradd --create-home fungusgr && \
