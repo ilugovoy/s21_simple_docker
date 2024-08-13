@@ -26,6 +26,8 @@ USER fungusgr
 COPY /nginx/nginx.conf /etc/nginx/
 COPY --from=build /app/my_server /usr/local/bin/my_server
 
+EXPOSE 8080
+
 HEALTHCHECK CMD curl -f http://localhost:8080/ || exit 1
 # curl -f http://localhost:8080/: использует curl для попытки выполнения запроса к http://localhost:8080/
 # -f означает, что запрос неудачен в случае получения ответа с кодом ошибки
