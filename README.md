@@ -388,13 +388,12 @@ spawn-fcgi -p 8080 /app/my_server
 
 ```Dockerfile
 FROM nginx:alpine AS build
+WORKDIR /app
 
 # Установка зависимостей
 RUN apt-get update && \
     apt-get install -y gcc make libfcgi-dev spawn-fcgi && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
 
 # Копируем файл сервера
 COPY server.c /app/server.c
@@ -405,6 +404,7 @@ RUN gcc -o my_server server.c -lfcgi
 
 # Финальный образ
 FROM nginx:alpine
+WORKDIR /app
 
 # Копируем скомпилированное приложение и конфигурацию
 COPY /nginx/nginx.conf /etc/nginx/
@@ -507,13 +507,12 @@ CMD spawn-fcgi -p 8080 /usr/local/bin/my_server && nginx -g 'daemon off;'
 
 ```Dockerfile
 FROM nginx:alpine AS build
+WORKDIR /app
 
 # Установка зависимостей
 RUN apt-get update && \
     apt-get install -y gcc make libfcgi-dev spawn-fcgi && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
 
 # Копируем файл сервера
 COPY server.c /app/server.c
@@ -524,6 +523,7 @@ RUN gcc -o my_server server.c -lfcgi
 
 # Финальный образ
 FROM nginx:alpine
+WORKDIR /app
 
 # Создание пользователя в контейнере
 RUN useradd --create-home fungusgr && \
